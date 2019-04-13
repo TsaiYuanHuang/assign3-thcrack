@@ -14,8 +14,8 @@ PImage stone1, stone2;
 PImage [] soil = new PImage [6];
 
 //soil
-float soilSpeed = 80/16;
 int soilY,y1,y2,y3;
+int soilbaseY = 160;
 
 //moving 
 boolean idle = true;
@@ -27,9 +27,6 @@ int groundhogX, groundhogY, groundhogSpeed;
 final int SPACING = 80;
 final int X_GROUNDHOG = 320;
 final int Y_GROUNDHOG = 80;
-
-int playerHealthY;
-int sunY;
 
 
 // For debug function; DO NOT edit or remove this!
@@ -64,9 +61,7 @@ void setup() {
   groundhogX = X_GROUNDHOG;
   groundhogY = Y_GROUNDHOG;
   groundhogSpeed = 80/16;
-  
-  sunY = 50;
-  playerHealthY = 10;
+
   
 }
 
@@ -114,17 +109,17 @@ void draw() {
       stroke(255,255,0);
       strokeWeight(5);
       fill(253,184,19);
-      ellipse(590,sunY,120,120);
+      ellipse(590,50,120,120);
 
     // Grass
     fill(124, 204, 25);
     noStroke();
-    rect(0, 160 - GRASS_HEIGHT, width, GRASS_HEIGHT);
+    rect(0, soilbaseY - GRASS_HEIGHT, width, GRASS_HEIGHT);
 
     // Soil - REPLACE THIS PART WITH YOUR LOOP CODE!
     for(int x=0; x<8; x++){
       for(int y=0; y<24;y++){
-        soilY = 160+y*80;
+        soilY = soilbaseY+y*80;
         if(y<4){
           image(soil[0], x*80, soilY);
         }
@@ -148,20 +143,20 @@ void draw() {
     
     // Stone1
     for(int i=0; i<8; i++){
-      y1 = (2+i)*SPACING;
+      y1 = soilbaseY+i*SPACING;
       image(stone1, i*SPACING, y1);
     }
     
     // Stone2
-    for(int y2=800; y2<1440; y2+=SPACING){
+    for(int y2=soilbaseY+640; y2<soilbaseY+1280; y2+=SPACING){
       for(int x=0; x<=width; x+=320){
-        if((y2-800)%(SPACING*4) == 0) {
-          image(stone1, x+SPACING, y2);
-          image(stone1,x+SPACING+80,y2);
+        if((y2-soilbaseY+640)%(SPACING*4) == 0) {
+          image(stone1, x+80, y2);
+          image(stone1,x+160,y2);
         }
-        else if((y2-800)/SPACING == 3 || (y2-800)/SPACING == 7){
-          image(stone1, x+SPACING, y2);
-          image(stone1,x+SPACING+80,y2);
+        else if((y2-(soilbaseY+640))/SPACING == 3 || (y2-(soilbaseY+640))/SPACING == 7){
+          image(stone1, x+80, y2);
+          image(stone1,x+160,y2);
         }
         else{
           image(stone1, x-80, y2);
@@ -171,13 +166,13 @@ void draw() {
     }
 
     // Stone3
-    for(int y3=1440; y3<2080; y3+=SPACING){
+    for(int y3=soilbaseY+1280; y3<soilbaseY+1920; y3+=SPACING){
       for(int x=0; x<=width; x+=240){
-        if((y3-1440)%(SPACING*3) == 0) {
+        if((y3-(soilbaseY+1280))%(SPACING*3) == 0) {
           image(stone1, x+80, y3);
           image(stone1,x+SPACING+80,y3);
         }
-        else if((y3-1440)/SPACING == 1 ||(y3-1440)/SPACING == 4||(y3-1440)/SPACING == 7){
+        else if((y3-(soilbaseY+1280))/SPACING == 1 || (y3-(soilbaseY+1280))/SPACING == 4 || (y3-(soilbaseY+1280))/SPACING == 7){
           image(stone1, x, y3);
           image(stone1,x+SPACING,y3);
         }
@@ -188,12 +183,12 @@ void draw() {
       }
     }
     
-    for(int y3=1440; y3<2080; y3+=SPACING){
+    for(int y3=soilbaseY+1280; y3<soilbaseY+1920; y3+=SPACING){
       for(int x=0; x<=width; x+=240){
-        if((y3-1440)%(SPACING*3) == 0) {
-          image(stone2, x+(SPACING*2), y3);
+        if((y3-(soilbaseY+1280))%(SPACING*3) == 0) {
+          image(stone2, x+SPACING+80, y3);
         }
-        else if((y3-1440)/SPACING == 1 ||(y3-1440)/SPACING == 4||(y3-1440)/SPACING == 7){
+        else if((y3-(soilbaseY+1280))/SPACING == 1 ||(y3-(soilbaseY+1280))/SPACING == 4||(y3-(soilbaseY+1280))/SPACING == 7){
           image(stone2, x+SPACING, y3);
         }
         else{
@@ -213,13 +208,20 @@ void draw() {
       leftPressed = false;
       rightPressed = false;
       image(groundhogDown,groundhogX,groundhogY);
-
-        groundhogY += groundhogSpeed;
-
-      if(groundhogY%80 == 0){
+      if(groundhogY < soilbaseY+1520){
+       soilbaseY -= groundhogSpeed;
+        if(soilbaseY%80 == 0){
         downPressed = false;
         idle = true;
+        }
       }
+      else{
+        groundhogY += groundhogSpeed;
+        if(groundhogY%80 == 0){
+        downPressed = false;
+        idle = true;
+        }
+      } 
     }
     
     if(leftPressed){
@@ -257,11 +259,16 @@ void draw() {
       idle = true;
       groundhogX = width-SPACING;
     }
+    if(groundhogY>height-SPACING){
+      downPressed = false;
+      idle = true;
+      groundhogY = height-SPACING;
+    }
 
     
     // Health UI
     for(int i=0; i<playerHealth; i++){
-      image(lifeImg,10+i*70, playerHealthY);
+      image(lifeImg,10+i*70, 10);
     }
 
     break;
