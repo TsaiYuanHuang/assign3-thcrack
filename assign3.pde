@@ -30,7 +30,7 @@ final int Y_GROUNDHOG = 80;
 
 
 // For debug function; DO NOT edit or remove this!
-int playerHealth = 2;
+int playerHealth = 0;
 float cameraOffsetY = 0;
 boolean debugMode = false;
 
@@ -62,6 +62,7 @@ void setup() {
   groundhogY = Y_GROUNDHOG;
   groundhogSpeed = 80/16;
 
+  playerHealth = 2;
   
 }
 
@@ -270,6 +271,10 @@ void draw() {
     for(int i=0; i<playerHealth; i++){
       image(lifeImg,10+i*70, 10);
     }
+    
+    if(playerHealth == 0){
+      gameState = GAME_OVER;
+    }
 
     break;
 
@@ -288,6 +293,10 @@ void draw() {
         // Remember to initialize the game here!
         groundhogX = X_GROUNDHOG;
         groundhogY = Y_GROUNDHOG;
+        playerHealth = 2;
+        soilbaseY = 160;
+        
+        gameState = GAME_START;
       }
     }else{
 
