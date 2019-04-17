@@ -296,7 +296,7 @@ void draw() {
         playerHealth = 2;
         soilbaseY = 160;
         
-        gameState = GAME_START;
+        gameState = GAME_;
       }
     }else{
 
