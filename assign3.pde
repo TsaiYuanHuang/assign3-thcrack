@@ -288,7 +288,7 @@ void draw() {
 
       image(restartHovered, START_BUTTON_X, START_BUTTON_Y);
       if(mousePressed){
-        gameState = GAME_RUN;
+        
         mousePressed = false;
         // Remember to initialize the game here!
         groundhogX = X_GROUNDHOG;
@@ -296,7 +296,7 @@ void draw() {
         playerHealth = 2;
         soilbaseY = 160;
         
-        gameState = GAME_;
+        gameState = GAME_RUN;
       }
     }else{
 
