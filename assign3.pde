@@ -199,56 +199,6 @@ void draw() {
     }
 
     
-    // Player
-    if(idle){
-      image(groundhogIdle,groundhogX,groundhogY);
-    }
-    
-    if(downPressed){
-      idle = false;
-      leftPressed = false;
-      rightPressed = false;
-      image(groundhogDown,groundhogX,groundhogY);
-      if(groundhogY < soilbaseY+1520){
-       soilbaseY -= groundhogSpeed;
-        if(soilbaseY%80 == 0){
-        downPressed = false;
-        idle = true;
-        }
-      }
-      else{
-        groundhogY += groundhogSpeed;
-        if(groundhogY%80 == 0){
-        downPressed = false;
-        idle = true;
-        }
-      } 
-    }
-    
-    if(leftPressed){
-      idle = false;
-      downPressed = false;
-      rightPressed = false;
-      image(groundhogLeft,groundhogX,groundhogY);
-      groundhogX -= groundhogSpeed;
-      if(groundhogX%80 == 0){
-        leftPressed = false;
-        idle = true;
-      }
-    }
-    
-    if(rightPressed){
-      idle = false;
-      leftPressed = false;
-      downPressed = false;
-      image(groundhogRight,groundhogX,groundhogY);
-      groundhogX += groundhogSpeed;
-      if(groundhogX%80 == 0){
-        rightPressed = false;
-        idle = true;
-      }
-    }
-    
     // Player boundary detection
     if(groundhogX<0){
       leftPressed = false;
@@ -267,6 +217,79 @@ void draw() {
     }
 
     
+    
+    // Player
+    if(idle){
+      image(groundhogIdle,groundhogX,groundhogY);
+    }
+    
+    if(downPressed){
+      if(groundhogY<height-SPACING){
+        idle = false;
+        leftPressed = false;
+        rightPressed = false;
+        image(groundhogDown,groundhogX,groundhogY);
+        if(groundhogY < soilbaseY+1520){
+         soilbaseY -= groundhogSpeed;
+          if(soilbaseY%80 == 0){
+          downPressed = false;
+          idle = true;
+          }
+        }
+        else{
+          groundhogY += groundhogSpeed;
+          if(groundhogY%80 == 0){
+          downPressed = false;
+          idle = true;
+          }
+        } 
+      }
+      else{
+        downPressed = false;
+        idle = true;
+      }
+    }
+    
+    if(leftPressed){
+      if(groundhogX>0){
+        idle = false;
+        downPressed = false;
+        rightPressed = false;
+        image(groundhogLeft,groundhogX,groundhogY);
+        groundhogX -= groundhogSpeed;
+        if(groundhogX%80 == 0){
+          leftPressed = false;
+          idle = true;
+        }
+      }
+      else{
+        leftPressed = false;
+        idle = true;
+      }
+
+    }
+    
+    if(rightPressed){
+      if(groundhogX<width-SPACING){
+        idle = false;
+        leftPressed = false;
+        downPressed = false;
+        image(groundhogRight,groundhogX,groundhogY);
+        groundhogX += groundhogSpeed;
+        if(groundhogX%80 == 0){
+          rightPressed = false;
+          idle = true;
+        }
+      }
+      else{
+        rightPressed = false;
+        idle = true;
+      }
+    }
+    
+    
+    
+
     // Health UI
     for(int i=0; i<playerHealth; i++){
       image(lifeImg,10+i*70, 10);
@@ -288,7 +311,7 @@ void draw() {
 
       image(restartHovered, START_BUTTON_X, START_BUTTON_Y);
       if(mousePressed){
-        
+        gameState = GAME_RUN;
         mousePressed = false;
         // Remember to initialize the game here!
         groundhogX = X_GROUNDHOG;
@@ -296,7 +319,8 @@ void draw() {
         playerHealth = 2;
         soilbaseY = 160;
         
-        gameState = GAME_RUN;
+        
+
       }
     }else{
 
@@ -318,13 +342,25 @@ void keyPressed(){
     if(key == CODED){
       switch(keyCode){
         case DOWN:
-          downPressed = true;
+          if(groundhogX%80 == 0 && groundhogY%80 == 0 && soilbaseY%80 == 0){
+            downPressed = true;
+            leftPressed = false;
+            rightPressed = false;
+          }
           break;
         case LEFT:
-          leftPressed = true;
+          if(groundhogX%80 == 0 && groundhogY%80 == 0 && soilbaseY%80 == 0){
+            leftPressed = true;
+            downPressed = false;
+            rightPressed = false;
+          }
           break;
         case RIGHT:
-          rightPressed = true;
+          if(groundhogX%80 == 0 && groundhogY%80 == 0 && soilbaseY%80 == 0){
+            rightPressed = true;
+            leftPressed = false;
+            downPressed = false;
+          }
           break;
       }
     }
